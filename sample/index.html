@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>High and Loud</title>
+<style>
+body {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+}
+
+.loading {
+position: absolute;
+/*background-image: url("/img/loading.gif");*/
+background-color: rgba( 0, 0, 0, .5 );
+background-position: center;
+background-repeat: no-repeat;
+padding:auto;
+text-align:center;
+font-size:10em;
+color:#fff;
+width: 100%;
+height: 90%;
+top: 10%;
+left: 0;
+}
+audio{
+position:relative;
+bottom: 40px;
+width:100%;
+}
+</style>
+<script type="text/goml">
+<goml>
+	<head>
+		<rdr />
+	</head>
+	<body>
+		<scene>
+			<mesh geo="[type='Sphere']" mtl="[type='MeshPhong']" />
+			<mesh geo="[type='Circle']" mtl="[type='MeshLambert']" style="positionY: -.5; rotateX: -1.57;" />
+
+			<light type="Amb" />
+			<light type="Dir" style="light-color: #9f9f9f; position:-14 28 60;" />
+
+			<camera style="position: 0 10 28; lookAtY: 10;" motion="../data/youu_m/camera.vmd" />
+			<mmd model="../data/you/yuuki_after.pmx" motion="../data/youu_m/dance.vmd"/>
+			<mmd model="../data/stage/stage.pmx" />
+
+		</scene>
+	</body>
+</goml>
+</script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="../script/jThree.js"></script>
+<script src="../plugin/ammo.js"></script>
+<script src="../plugin/jThree.Stats.js"></script>
+<script src="../plugin/jThree.MMD.js"></script>
+<script src="../plugin/jThree.MobileVR.js"></script>
+<script>
+jThree( function( j3 ) {
+	var vr=j3.MobileVR(),rdr=j3("rdr");
+	$(".loading").remove();
+	$("audio").on( "play",function(){
+		rdr.attr("rendering",true);
+		j3.MMD.play();
+		vr.start();
+
+	})
+	.on("ended pause",function() {
+		rdr.attr("rendering",false);
+		vr.stop();
+		j3.MMD.pause();
+	})
+	.on("timeupdate",function() {
+		j3.MMD.seek(this.currentTime);
+	})
+},
+function() {
+	alert( "Your browser does not support WebGL." );
+} );
+</script>
+</head>
+<body>
+
+<div class="loading">Loading</div>
+<audio src="../audio/high_and_loud.mp3" controls></audio>
+</body>
+</html>
